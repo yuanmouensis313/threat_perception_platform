@@ -48,6 +48,13 @@
         delete from service
         where  mac = #{mac,jdbcType=VARCHAR}
     </delete>
+    <delete id="delete">
+        delete from service
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.tpp.threat_perception_platform.pojo.Service" useGeneratedKeys="true">
         insert into service
         ( id,mac,protocol

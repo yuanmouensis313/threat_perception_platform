@@ -47,6 +47,13 @@
         delete from process
         where  mac = #{mac,jdbcType=VARCHAR}
     </delete>
+    <delete id="delete">
+        delete from process
+        where  id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.tpp.threat_perception_platform.pojo.Process" useGeneratedKeys="true">
         insert into process
         ( id,mac,pid

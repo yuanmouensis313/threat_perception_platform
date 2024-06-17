@@ -62,11 +62,10 @@ public class ProcessServiceImpl implements ProcessService {
      */
     @Override
     public ResponseResult deleteProcess(Integer[] ids) {
-        // 遍历待删除的账号ID数组
+        // 待删除ID数组
         // 遍历删除
-        for (Integer id : ids) {
-            processMapper.deleteByPrimaryKey(id.longValue());
-        }
+        processMapper.delete(ids);
+
         // 返回表示删除成功的结果对象
         // 返回表示删除成功的结果对象
         return new ResponseResult(0, "删除成功!");

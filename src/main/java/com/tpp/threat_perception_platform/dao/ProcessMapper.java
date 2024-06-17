@@ -18,6 +18,8 @@ public interface ProcessMapper {
 
     int deleteByMac(String mac);
 
+    void delete(@Param("ids") Integer[] ids);
+
     int insert(Process record);
 
     int insertSelective(Process record);

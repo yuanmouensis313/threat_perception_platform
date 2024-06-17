@@ -16,6 +16,12 @@ public interface AccountMapper {
 
     int deleteByPrimaryKey(Long id);
 
+    /**
+     * 删除多条数据
+     * @param ids
+     */
+    void delete(@Param("ids") Integer[] ids);
+
     int insert(Account record);
 
     int insertSelective(Account record);

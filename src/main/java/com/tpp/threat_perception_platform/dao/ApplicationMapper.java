@@ -16,6 +16,8 @@ public interface ApplicationMapper {
 
     int deleteByPrimaryKey(Long id);
 
+    void delete(@Param("ids") Integer[] ids);
+
     int insert(Application record);
 
     int insertSelective(Application record);

@@ -63,11 +63,9 @@ public class HotfixServiceImpl implements HotfixService {
      */
     @Override
     public ResponseResult deleteHotfix(Integer[] ids) {
-        // 遍历待删除的账号ID数组
-        // 遍历删除
-        for (Integer id : ids) {
-            hotfixMapper.deleteByPrimaryKey(id.longValue());
-        }
+        // 待删除的ID数组
+        hotfixMapper.delete(ids);
+
         // 返回表示删除成功的结果对象
         // 返回表示删除成功的结果对象
         return new ResponseResult(0, "删除成功!");

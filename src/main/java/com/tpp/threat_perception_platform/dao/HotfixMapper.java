@@ -20,6 +20,8 @@ public interface HotfixMapper {
 
     int deleteByMac(String mac);
 
+    void delete(@Param("ids") Integer[] ids);
+
     int insert(Hotfix record);
 
     int insertSelective(Hotfix record);

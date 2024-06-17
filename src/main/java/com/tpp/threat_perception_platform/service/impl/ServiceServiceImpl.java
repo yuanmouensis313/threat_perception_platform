@@ -61,11 +61,9 @@ public class ServiceServiceImpl implements ServiceService {
      */
     @Override
     public ResponseResult deleteService(Integer[] ids) {
-        // 遍历待删除的账号ID数组
-        // 遍历删除
-        for (Integer id : ids) {
-            serviceMapper.deleteByPrimaryKey(id.longValue());
-        }
+        // 待删除的ID数组
+        serviceMapper.delete(ids);
+
         // 返回表示删除成功的结果对象
         // 返回表示删除成功的结果对象
         return new ResponseResult(0, "删除成功!");

@@ -18,6 +18,8 @@ public interface ServiceMapper {
 
     int deleteByMac(String mac);
 
+    void delete(@Param("ids") Integer[] ids);
+
     int insert(Service record);
 
     int insertSelective(Service record);

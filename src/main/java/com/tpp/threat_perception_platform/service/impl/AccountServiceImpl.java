@@ -61,11 +61,9 @@ public class AccountServiceImpl implements AccountService {
      * @return
      */
     public ResponseResult deleteAccount(Integer[] ids) {
-        // 遍历待删除的账号ID数组
-        // 遍历删除
-        for (Integer id : ids) {
-            accountMapper.deleteByPrimaryKey(id.longValue());
-        }
+        // 删除账号ID数组
+        accountMapper.delete(ids);
+
         // 返回表示删除成功的结果对象
         // 返回表示删除成功的结果对象
         return new ResponseResult(0, "删除成功!");

@@ -63,11 +63,9 @@ public class ApplicationServiceImpl implements ApplicationService {
      */
     @Override
     public ResponseResult deleteApplication(Integer[] ids) {
-        // 遍历待删除的账号ID数组
-        // 遍历删除
-        for (Integer id : ids) {
-            applicationMapper.deleteByPrimaryKey(id.longValue());
-        }
+        // 待删除的ID数组
+        applicationMapper.delete(ids);
+
         // 返回表示删除成功的结果对象
         // 返回表示删除成功的结果对象
         return new ResponseResult(0, "删除成功!");
