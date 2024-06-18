@@ -13,6 +13,7 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,9 @@ public class RabbitMQSysInfoConsumer {
 
     @Autowired
     private HotfixService hotfixService;
+
+    @Autowired
+    private UserVulnerabilityService userVulnerabilityService;
 
     @RabbitListener(queues = {"sysinfo_queue"})
 
@@ -173,6 +177,32 @@ public class RabbitMQSysInfoConsumer {
 
         // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
         int res = hotfixService.addHotfix(hotfixes);
+
+        if (res > 0){
+            // res>0，说明影响行数不为0，入库成功
+            // 手动 ACK, 先获取 deliveryTag
+            Long deliveryTag = (Long)headers.get(AmqpHeaders.DELIVERY_TAG);
+            // ACK
+            channel.basicAck(deliveryTag,false);
+        }
+    }
+
+    @RabbitListener(queues = {"vul_queue"})
+
+    public void userVulnerability(String message, @Headers Map<String,Object> headers,
+                       Channel channel) throws IOException {
+        // 将json字符串类型的消息转化为Vulnerability对象
+        List<UserVulnerability> userVulnerabilities = JSON.parseArray(message, UserVulnerability.class);
+
+        // 获取当前时间并设置到vulnerabilities中
+        for (UserVulnerability userVulnerability : userVulnerabilities) {
+            userVulnerability.setTime(new Date());
+            userVulnerability.setTaskSender("sys");
+            System.out.println(userVulnerability);
+        }
+
+        // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
+        int res = userVulnerabilityService.addUserVulnerability(userVulnerabilities);
 
         if (res > 0){
             // res>0，说明影响行数不为0，入库成功

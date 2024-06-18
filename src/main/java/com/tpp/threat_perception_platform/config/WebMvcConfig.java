@@ -56,5 +56,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/page/hotfix/list").setViewName("host/hotfix");
         // 热补丁详情信息
         registry.addViewController("/page/hotfix/detail").setViewName("host/hotfixDetail");
+        // 探测到的漏洞信息
+        registry.addViewController("/page/user_vulnerability/list").setViewName("host/userVulnerability");
+        // 漏洞详情信息
+        registry.addViewController("/page/userVulnerability/detail").setViewName("host/userVulnerabilityDetail");
+
+
+        // 资源管理相关页面
+        // 漏洞库信息
+        registry.addViewController("/page/resource/vulnerability").setViewName("resource/vulnerability");
+        // 漏洞库详细信息
+        registry.addViewController("/page/vulnerability/detail").setViewName("resource/vulnerabilityDetail");
+        // 添加漏洞信息
+        registry.addViewController("/page/vulnerability/add").setViewName("resource/vulnerabilityAdd");
+
     }
 }

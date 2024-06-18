@@ -4,13 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tpp.threat_perception_platform.dao.HostMapper;
+import com.tpp.threat_perception_platform.dao.VulnerabilityMapper;
 import com.tpp.threat_perception_platform.param.AssetsParam;
 import com.tpp.threat_perception_platform.param.MyParam;
 import com.tpp.threat_perception_platform.param.ThreatParam;
 import com.tpp.threat_perception_platform.pojo.Host;
+import com.tpp.threat_perception_platform.pojo.Vulnerability;
 import com.tpp.threat_perception_platform.response.ResponseResult;
 import com.tpp.threat_perception_platform.service.HostService;
 import com.tpp.threat_perception_platform.service.RabbitmqService;
+import com.tpp.threat_perception_platform.service.VulnerabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,9 @@ public class HostServiceImpl implements HostService {
 
     @Autowired
     private RabbitmqService rabbitmqService;
+
+    @Autowired
+    private VulnerabilityService vulnerabilityService;
 
     /**
      * 推送主机信息到数据库中：更新和插入
@@ -212,6 +218,13 @@ public class HostServiceImpl implements HostService {
 
             // 返回离线信息
             return new ResponseResult(400, "主机离线！请通知主机重新上线！！！");
+        }
+        // 如果threatParam中的vulnerability参数为1，说明进行漏洞探测，需要将漏洞数据库传到客户端去
+        if(threatParam.getVulnerability() == 1){
+            // 查询漏洞数据列表
+            List<Vulnerability> vulnerabilityList = vulnerabilityService.findAll();
+            // 将数据列表传入threatParam对象中
+            threatParam.setVulnerabilities(vulnerabilityList);
         }
 
         // 2.将ThreatParam对象转换为JSON字符串
