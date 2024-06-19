@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>资产探测</title>
+    <title>弱密码详情</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -24,32 +24,46 @@
 
 <!--表单-->
 <div class="layui-form" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin" style="padding: 20px 0 0 0;">
-    <input type="hidden" name="roleId">
-    <!--  主机名  -->
+    <input type="hidden" name="id">
     <div class="layui-form-item">
-        <label class="layui-form-label">主机名<span class="xinghao">*</span></label>
+        <!--  ID  -->
+        <label class="layui-form-label">ID</label>
         <div class="layui-input-inline st">
-            <input type="text" name="hostname" class="layui-input" readonly>
+            <input type="text" name="id" readonly class="layui-input">
+        </div>
+
+        <!--  MAC地址  -->
+        <label class="layui-form-label">MAC地址</label>
+        <div class="layui-input-inline st">
+            <input type="text" name="mac" readonly class="layui-input">
         </div>
     </div>
 
-    <!--  MAC地址  -->
     <div class="layui-form-item">
-        <label class="layui-form-label">MAC地址<span class="xinghao">*</span></label>
+        <!--  账号名称  -->
+        <label class="layui-form-label">账号名称</label>
         <div class="layui-input-inline st">
-            <input type="text" name="mac" class="layui-input" readonly>
+            <input type="text" name="accountName" readonly class="layui-input">
+        </div>
+
+        <!--  弱口令  -->
+        <label class="layui-form-label">弱口令</label>
+        <div class="layui-input-inline st">
+            <input type="text" name="weakPwd" readonly class="layui-input">
         </div>
     </div>
 
-    <!--  复选框  -->
     <div class="layui-form-item">
-        <label class="layui-form-label">资产探测项<span class="xinghao">*</span></label>
+        <!--  扫描时间  -->
+        <label class="layui-form-label">扫描时间</label>
         <div class="layui-input-inline st">
-            <input type="checkbox" name="hotfix" value=1 title="补丁探测" lay-skin="primary" checked>
-            <input type="checkbox" name="vulnerability" value=1 title="漏洞检测" lay-skin="primary">
-            <input type="checkbox" name="weakPassword" value=1 title="弱口令探测" lay-skin="primary">
-            <input type="checkbox" name="application" value=1 title="应用风险探测" lay-skin="primary">
-            <input type="checkbox" name="system" value=1 title="系统风险探测" lay-skin="primary">
+            <input type="text" name="time" readonly class="layui-input">
+        </div>
+
+        <!--  任务发起者  -->
+        <label class="layui-form-label">任务发起者</label>
+        <div class="layui-input-inline st">
+            <input type="text" name="taskSender" readonly class="layui-input">
         </div>
     </div>
 

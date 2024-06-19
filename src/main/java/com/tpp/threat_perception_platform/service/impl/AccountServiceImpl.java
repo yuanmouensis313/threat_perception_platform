@@ -69,4 +69,9 @@ public class AccountServiceImpl implements AccountService {
         return new ResponseResult(0, "删除成功!");
     }
 
+    @Override
+    public List<Account> getAccountListByMac(String mac) {
+        return accountMapper.selectByMac(mac);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.tpp.threat_perception_platform.param;
 
 
+import com.tpp.threat_perception_platform.pojo.Account;
 import com.tpp.threat_perception_platform.pojo.Vulnerability;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +26,7 @@ public class ThreatParam {
     private Integer vulnerability = 0;
 
     // 弱口令探测，默认为0，0表示不进行探测，1表示进行探测
-    private Integer weekPassword = 0;
+    private Integer weakPassword = 0;
 
     // 应用风险探测，默认为0，0表示不进行探测，1表示进行探测
     private Integer application = 0;
@@ -35,6 +36,9 @@ public class ThreatParam {
 
     // 漏洞数据库列表，传送到客户端进行测试
     private List<Vulnerability>  vulnerabilities;
+
+    // 账户列表，传送到客户端进行测试
+    private List<Account> accounts;
 
     // 探测类型，用于区分：资产探测和威胁探测
     private String type = "threat";

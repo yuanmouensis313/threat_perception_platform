@@ -32,6 +32,8 @@ public interface AccountMapper {
 
     List<Account> selectAll(MyParam param);
 
+    List<Account> selectByMac(String mac);
+
     int updateByPrimaryKeySelective(Account record);
 
     int updateByPrimaryKey(Account record);

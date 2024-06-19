@@ -2,7 +2,6 @@ package com.tpp.threat_perception_platform.consumer;
 
 import com.alibaba.fastjson.JSON;
 import com.rabbitmq.client.Channel;
-import com.tpp.threat_perception_platform.dao.ProcessMapper;
 import com.tpp.threat_perception_platform.pojo.*;
 import com.tpp.threat_perception_platform.pojo.Process;
 import com.tpp.threat_perception_platform.service.*;
@@ -39,6 +38,9 @@ public class RabbitMQSysInfoConsumer {
 
     @Autowired
     private UserVulnerabilityService userVulnerabilityService;
+
+    @Autowired
+    private WeakPwdService weakPwdService;
 
     @RabbitListener(queues = {"sysinfo_queue"})
 
@@ -203,6 +205,30 @@ public class RabbitMQSysInfoConsumer {
 
         // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
         int res = userVulnerabilityService.addUserVulnerability(userVulnerabilities);
+
+        if (res > 0){
+            // res>0，说明影响行数不为0，入库成功
+            // 手动 ACK, 先获取 deliveryTag
+            Long deliveryTag = (Long)headers.get(AmqpHeaders.DELIVERY_TAG);
+            // ACK
+            channel.basicAck(deliveryTag,false);
+        }
+    }
+
+    @RabbitListener(queues = {"weak_pwd_queue"})
+
+    public void weakPwd(String message, @Headers Map<String,Object> headers,
+                       Channel channel) throws IOException {
+        // 将json字符串类型的消息转化为WeakPwd对象
+        List<WeakPwd> weakPwds = JSON.parseArray(message, WeakPwd.class);
+
+        // 添加扫描时间和任务发起者
+        for (WeakPwd weakPwd : weakPwds) {
+            weakPwd.setTime(new Date());
+            weakPwd.setTaskSender("admin");
+        }
+        // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
+        int res = weakPwdService.addWeakPwd(weakPwds);
 
         if (res > 0){
             // res>0，说明影响行数不为0，入库成功

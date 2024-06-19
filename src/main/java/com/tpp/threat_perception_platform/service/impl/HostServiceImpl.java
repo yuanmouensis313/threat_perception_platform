@@ -8,9 +8,11 @@ import com.tpp.threat_perception_platform.dao.VulnerabilityMapper;
 import com.tpp.threat_perception_platform.param.AssetsParam;
 import com.tpp.threat_perception_platform.param.MyParam;
 import com.tpp.threat_perception_platform.param.ThreatParam;
+import com.tpp.threat_perception_platform.pojo.Account;
 import com.tpp.threat_perception_platform.pojo.Host;
 import com.tpp.threat_perception_platform.pojo.Vulnerability;
 import com.tpp.threat_perception_platform.response.ResponseResult;
+import com.tpp.threat_perception_platform.service.AccountService;
 import com.tpp.threat_perception_platform.service.HostService;
 import com.tpp.threat_perception_platform.service.RabbitmqService;
 import com.tpp.threat_perception_platform.service.VulnerabilityService;
@@ -29,6 +31,9 @@ public class HostServiceImpl implements HostService {
 
     @Autowired
     private VulnerabilityService vulnerabilityService;
+
+    @Autowired
+    private AccountService accountService;
 
     /**
      * 推送主机信息到数据库中：更新和插入
@@ -225,6 +230,16 @@ public class HostServiceImpl implements HostService {
             List<Vulnerability> vulnerabilityList = vulnerabilityService.findAll();
             // 将数据列表传入threatParam对象中
             threatParam.setVulnerabilities(vulnerabilityList);
+        }
+
+        // 如果threatParam中的weekPassword参数为1，说明进行弱口令探测(系统账号弱口令探测和系统服务弱口令探测)，需要将用户的账号数据库和服务数据库传到客户端去，进行弱口令测试
+        if(threatParam.getWeakPassword() == 1)
+        {
+            // 根据主机的MAC地址查询主机上的账号信息
+            List<Account> accountList = accountService.getAccountListByMac(threatParam.getMac());
+
+            // 将数据列表传入threatParam对象中
+            threatParam.setAccounts(accountList);
         }
 
         // 2.将ThreatParam对象转换为JSON字符串

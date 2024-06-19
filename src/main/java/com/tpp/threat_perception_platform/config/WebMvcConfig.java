@@ -62,6 +62,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/page/vulnerability/detail").setViewName("host/vulnerabilityDetail");
         // 添加漏洞信息
         registry.addViewController("/page/vulnerability/add").setViewName("host/vulnerabilityAdd");
+        // 弱口令信息
+        registry.addViewController("/page/weakPwd/list").setViewName("host/weakPwd");
+        // 弱口令详细信息
+        registry.addViewController("/page/weakPwd/detail").setViewName("host/weakPwdDetail");
 
     }
 }

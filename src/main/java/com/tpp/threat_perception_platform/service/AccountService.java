@@ -16,4 +16,7 @@ public interface AccountService {
 
     // 删除账号信息
     ResponseResult deleteAccount(Integer[] ids);
+
+    // 根据账号的MAC地址获取所有的相关账号信息
+    List<Account> getAccountListByMac(String mac);
 }
