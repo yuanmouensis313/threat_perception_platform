@@ -42,6 +42,9 @@ public class RabbitMQSysInfoConsumer {
     @Autowired
     private WeakPwdService weakPwdService;
 
+    @Autowired
+    private UserAppVulnerabilityService userAppVulnerabilityService;
+
     @RabbitListener(queues = {"sysinfo_queue"})
 
     public void receive_message(String message, @Headers Map<String,Object> headers,
@@ -229,6 +232,30 @@ public class RabbitMQSysInfoConsumer {
         }
         // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
         int res = weakPwdService.addWeakPwd(weakPwds);
+
+        if (res > 0){
+            // res>0，说明影响行数不为0，入库成功
+            // 手动 ACK, 先获取 deliveryTag
+            Long deliveryTag = (Long)headers.get(AmqpHeaders.DELIVERY_TAG);
+            // ACK
+            channel.basicAck(deliveryTag,false);
+        }
+    }
+
+    @RabbitListener(queues = {"app_vul_queue"})
+
+    public void appVulnerability(String message, @Headers Map<String,Object> headers,
+                        Channel channel) throws IOException {
+        // 将json字符串类型的消息转化为UserAppVulnerability对象
+        List<UserAppVulnerability> userAppVulnerabilities = JSON.parseArray(message, UserAppVulnerability.class);
+
+        // 添加扫描时间和任务发起者
+        for (UserAppVulnerability userAppVulnerability : userAppVulnerabilities) {
+            userAppVulnerability.setTime(new Date());
+            userAppVulnerability.setTaskSender("admin");
+        }
+        // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
+        int res = userAppVulnerabilityService.addUserAppVulnerability(userAppVulnerabilities);
 
         if (res > 0){
             // res>0，说明影响行数不为0，入库成功

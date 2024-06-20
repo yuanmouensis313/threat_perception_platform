@@ -3,19 +3,18 @@ package com.tpp.threat_perception_platform.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.tpp.threat_perception_platform.dao.AppVulnerabilityMapper;
 import com.tpp.threat_perception_platform.dao.HostMapper;
 import com.tpp.threat_perception_platform.dao.VulnerabilityMapper;
 import com.tpp.threat_perception_platform.param.AssetsParam;
 import com.tpp.threat_perception_platform.param.MyParam;
 import com.tpp.threat_perception_platform.param.ThreatParam;
 import com.tpp.threat_perception_platform.pojo.Account;
+import com.tpp.threat_perception_platform.pojo.AppVulnerability;
 import com.tpp.threat_perception_platform.pojo.Host;
 import com.tpp.threat_perception_platform.pojo.Vulnerability;
 import com.tpp.threat_perception_platform.response.ResponseResult;
-import com.tpp.threat_perception_platform.service.AccountService;
-import com.tpp.threat_perception_platform.service.HostService;
-import com.tpp.threat_perception_platform.service.RabbitmqService;
-import com.tpp.threat_perception_platform.service.VulnerabilityService;
+import com.tpp.threat_perception_platform.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +33,9 @@ public class HostServiceImpl implements HostService {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private AppVulnerabilityService appVulnerabilityService;
 
     /**
      * 推送主机信息到数据库中：更新和插入
@@ -240,6 +242,16 @@ public class HostServiceImpl implements HostService {
 
             // 将数据列表传入threatParam对象中
             threatParam.setAccounts(accountList);
+        }
+
+        // 如果threatParam中的application参数为1，说明进行应用风险探测，需要将应用漏洞数据库传到客户端去，进行应用风险测试
+        if(threatParam.getApplication() == 1)
+        {
+            // 查询应用漏洞数据列表
+            List<AppVulnerability> appVulnerabilityList = appVulnerabilityService.findAppVulnerabilityList();
+
+            // 将数据列表传入threatParam对象中
+            threatParam.setAppVulnerabilities(appVulnerabilityList);
         }
 
         // 2.将ThreatParam对象转换为JSON字符串

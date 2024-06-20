@@ -2,6 +2,7 @@ package com.tpp.threat_perception_platform.param;
 
 
 import com.tpp.threat_perception_platform.pojo.Account;
+import com.tpp.threat_perception_platform.pojo.AppVulnerability;
 import com.tpp.threat_perception_platform.pojo.Vulnerability;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,6 +40,9 @@ public class ThreatParam {
 
     // 账户列表，传送到客户端进行测试
     private List<Account> accounts;
+
+    // 应用漏洞列表，传送到客户端进行测试
+    private List<AppVulnerability> appVulnerabilities;
 
     // 探测类型，用于区分：资产探测和威胁探测
     private String type = "threat";
