@@ -71,5 +71,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 弱口令详细信息
         registry.addViewController("/page/appVulnerability/detail").setViewName("host/appVulnerabilityDetail");
 
+        // 日志探测相关信息
+        // 全部日志信息
+        registry.addViewController("/page/log/list").setViewName("log/list");
+        // 日志详情
+        registry.addViewController("/page/log/detail").setViewName("log/detail");
+        // 登录日志信息
+        registry.addViewController("/page/log/loginList").setViewName("log/loginList");
+        // 账号日志信息
+        registry.addViewController("/page/log/accountList").setViewName("log/accountList");
+
     }
 }

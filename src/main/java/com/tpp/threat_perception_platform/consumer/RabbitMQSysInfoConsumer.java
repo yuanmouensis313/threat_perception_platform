@@ -1,6 +1,8 @@
 package com.tpp.threat_perception_platform.consumer;
 
+
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.rabbitmq.client.Channel;
 import com.tpp.threat_perception_platform.pojo.*;
 import com.tpp.threat_perception_platform.pojo.Process;
@@ -12,6 +14,8 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +48,9 @@ public class RabbitMQSysInfoConsumer {
 
     @Autowired
     private UserAppVulnerabilityService userAppVulnerabilityService;
+
+    @Autowired
+    private LogService logService;
 
     @RabbitListener(queues = {"sysinfo_queue"})
 
@@ -256,6 +263,39 @@ public class RabbitMQSysInfoConsumer {
         }
         // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
         int res = userAppVulnerabilityService.addUserAppVulnerability(userAppVulnerabilities);
+
+        if (res > 0){
+            // res>0，说明影响行数不为0，入库成功
+            // 手动 ACK, 先获取 deliveryTag
+            Long deliveryTag = (Long)headers.get(AmqpHeaders.DELIVERY_TAG);
+            // ACK
+            channel.basicAck(deliveryTag,false);
+        }
+    }
+
+    @RabbitListener(queues = {"logs_queue"})
+
+    public void log(String message, @Headers Map<String,Object> headers,
+                                 Channel channel) throws IOException {
+        // 将json字符串类型的消息转化为UserAppVulnerability对象
+        List<Log> logList = JSON.parseArray(message, Log.class);
+
+        // 添加扫描时间和转换时间戳格式
+        for (Log log : logList) {
+            // 添加扫描时间
+            log.setSubmitTime(new Date());
+
+            // 将时间戳格式转换为Date
+            String timestampStr = log.getTimestampStr();
+            try {
+                Date timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(timestampStr);
+                log.setTimestamp(timestamp);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
+        int res = logService.addLogList(logList);
 
         if (res > 0){
             // res>0，说明影响行数不为0，入库成功
