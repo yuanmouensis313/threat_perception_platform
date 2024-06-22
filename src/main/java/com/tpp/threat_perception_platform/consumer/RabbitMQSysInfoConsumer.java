@@ -52,6 +52,9 @@ public class RabbitMQSysInfoConsumer {
     @Autowired
     private LogService logService;
 
+    @Autowired
+    private BaseLineResultService baseLineResultService;
+
     @RabbitListener(queues = {"sysinfo_queue"})
 
     public void receive_message(String message, @Headers Map<String,Object> headers,
@@ -296,6 +299,30 @@ public class RabbitMQSysInfoConsumer {
         }
         // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
         int res = logService.addLogList(logList);
+
+        if (res > 0){
+            // res>0，说明影响行数不为0，入库成功
+            // 手动 ACK, 先获取 deliveryTag
+            Long deliveryTag = (Long)headers.get(AmqpHeaders.DELIVERY_TAG);
+            // ACK
+            channel.basicAck(deliveryTag,false);
+        }
+    }
+
+    @RabbitListener(queues = {"base_line_queue"})
+
+    public void baseLineResult(String message, @Headers Map<String,Object> headers,
+                    Channel channel) throws IOException {
+        // 将json字符串类型的消息转化为UserAppVulnerability对象
+        List<BaseLineResult> baseLineResultList = JSON.parseArray(message, BaseLineResult.class);
+
+        // 添加扫描时间
+        for (BaseLineResult result : baseLineResultList) {
+            // 添加扫描时间
+            result.setTime(new Date());
+        }
+        // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
+        int res = baseLineResultService.addBaseLineResult(baseLineResultList);
 
         if (res > 0){
             // res>0，说明影响行数不为0，入库成功

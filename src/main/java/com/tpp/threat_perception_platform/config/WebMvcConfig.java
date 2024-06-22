@@ -81,5 +81,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 账号日志信息
         registry.addViewController("/page/log/accountList").setViewName("log/accountList");
 
+        // 基线检测相关页面
+        // 基线任务列表
+        registry.addViewController("/page/baseLineTask/list").setViewName("baseLine/baseLineTask");
+        // 基线任务详情
+        registry.addViewController("/page/baseLineTask/detail").setViewName("baseLine/baseLineTaskDetail");
+        // 基线任务详情编辑
+        registry.addViewController("/page/baseLineTask/edit").setViewName("baseLine/baseLineTaskEdit");
+        // 基线任务详情添加
+        registry.addViewController("/page/baseLineTask/add").setViewName("baseLine/baseLineTaskAdd");
+        // 基线检测结果
+        registry.addViewController("/page/baseLineResult/list").setViewName("baseLine/baseLineResult");
+        // 基线检测结果详情
+        registry.addViewController("/page/baseLineResult/detail").setViewName("baseLine/baseLineResultDetail");
+
     }
 }
