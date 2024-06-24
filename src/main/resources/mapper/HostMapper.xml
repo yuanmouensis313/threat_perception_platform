@@ -60,6 +60,11 @@
         from host
         order by host_id asc
     </select>
+    <select id="selectHostTypes" resultType="com.tpp.threat_perception_platform.pojo.Host">
+        select host_id, os_type
+        from host
+        order by host_id asc
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from host

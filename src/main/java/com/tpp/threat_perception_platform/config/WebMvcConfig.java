@@ -15,6 +15,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/page/console").setViewName("console");
         // 登录页面
         registry.addViewController("/page/login").setViewName("login");
+        // 修改密码
+        registry.addViewController("/page/changePassword").setViewName("login/changePassword");
         // 用户相关页面
         registry.addViewController("/page/user/list").setViewName("user/list");
         registry.addViewController("/page/user/edit").setViewName("user/edit");

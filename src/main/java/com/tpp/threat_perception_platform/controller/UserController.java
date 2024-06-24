@@ -1,5 +1,6 @@
 package com.tpp.threat_perception_platform.controller;
 
+import com.tpp.threat_perception_platform.param.ChangePwdParam;
 import com.tpp.threat_perception_platform.param.MyParam;
 import com.tpp.threat_perception_platform.pojo.User;
 import com.tpp.threat_perception_platform.response.ResponseResult;
@@ -73,4 +74,8 @@ public class UserController {
         return userService.delete(ids);
     }
 
+    @PostMapping("/user/changePwd")
+    public ResponseResult updateUser(@RequestBody ChangePwdParam param){
+        return userService.changePwd(param);
+    }
 }

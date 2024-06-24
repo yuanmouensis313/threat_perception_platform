@@ -28,4 +28,7 @@ public interface HostService {
 
     // 威胁探测的逻辑处理模块
     ResponseResult threat(ThreatParam param);
+
+    // 查询所有主机的类型返回前端，统计到饼状图中
+    ResponseResult findHostTypes();
 }

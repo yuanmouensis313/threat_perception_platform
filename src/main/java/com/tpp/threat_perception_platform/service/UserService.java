@@ -1,5 +1,6 @@
 package com.tpp.threat_perception_platform.service;
 
+import com.tpp.threat_perception_platform.param.ChangePwdParam;
 import com.tpp.threat_perception_platform.param.MyParam;
 import com.tpp.threat_perception_platform.pojo.User;
 import com.tpp.threat_perception_platform.response.ResponseResult;
@@ -42,4 +43,11 @@ public interface UserService {
      * @return
      */
     ResponseResult delete(Integer[] ids);
+
+    /**
+     * 修改密码
+     * @param changePwdParam
+     * @return
+     */
+    ResponseResult changePwd(ChangePwdParam changePwdParam);
 }

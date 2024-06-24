@@ -3,6 +3,7 @@ package com.tpp.threat_perception_platform.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tpp.threat_perception_platform.dao.UserMapper;
+import com.tpp.threat_perception_platform.param.ChangePwdParam;
 import com.tpp.threat_perception_platform.param.MyParam;
 import com.tpp.threat_perception_platform.pojo.User;
 import com.tpp.threat_perception_platform.response.ResponseResult;
@@ -96,5 +97,33 @@ public class UserServiceImpl implements UserService {
     public ResponseResult delete(Integer[] ids) {
         userMapper.delete(ids);
         return new ResponseResult<>(0, "删除成功！");
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param changePwdParam
+     * @return
+     */
+    @Override
+    public ResponseResult changePwd(ChangePwdParam changePwdParam) {
+        // 1. 验证旧密码正确
+        // 旧密码加密
+        String oldPwd = bCryptPasswordEncoder.encode(changePwdParam.getOldPwd());
+        // 获取数据库中的密码,根据用户名查询
+        User db_user = userMapper.selectByUserName(changePwdParam.getUsername());
+        String db_pwd = db_user.getUserPwd();
+
+        if (bCryptPasswordEncoder.matches(changePwdParam.getOldPwd(), db_pwd)){
+            // 2. 两者相等，说明旧密码正确，修改密码
+            User user = new User();
+            user.setUserName(changePwdParam.getUsername());
+            user.setUserPwd(bCryptPasswordEncoder.encode(changePwdParam.getNewPwd()));
+            user.setId(db_user.getId());
+            userMapper.updateByPrimaryKeySelective(user);
+            return new ResponseResult<>(0, "修改成功！");
+        }
+        // 否则说明旧密码不对，返回错误信息
+        return new ResponseResult(200, "旧密码错误！");
     }
 }

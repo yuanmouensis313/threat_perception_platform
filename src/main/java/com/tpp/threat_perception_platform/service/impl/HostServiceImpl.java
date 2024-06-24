@@ -267,4 +267,13 @@ public class HostServiceImpl implements HostService {
         return new ResponseResult<>(0, "发送成功，请稍后，等待探测结果传回！！！");
     }
 
+    /**
+     * 查询所有主机的类型返回前端，统计到饼状图中
+     * @return
+     */
+    @Override
+    public ResponseResult findHostTypes() {
+        return new ResponseResult<>(0, hostMapper.selectHostTypes());
+    }
+
 }

@@ -69,4 +69,13 @@ public class HostController {
     public ResponseResult threat(@RequestBody ThreatParam threatParam){
         return hostService.threat(threatParam);
     }
+
+    /**
+     * 查询所有主机的类型返回前端，统计到饼状图中
+     * @return 返回查询结果的ResponseResult对象
+     */
+    @PostMapping("host/list/types")
+    public ResponseResult hostListTypes(){
+        return hostService.findHostTypes();
+    }
 }

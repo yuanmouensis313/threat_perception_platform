@@ -26,6 +26,8 @@ public interface HostMapper {
 
     List<Host> selectAllHosts();
 
+    List<Host> selectHostTypes();
+
     int updateByPrimaryKeySelective(Host record);
 
     int updateByPrimaryKey(Host record);

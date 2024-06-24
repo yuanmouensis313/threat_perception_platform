@@ -49,7 +49,7 @@
           </a>
           <dl class="layui-nav-child">
             <dd><a lay-href="personal_information_management/info.html">基本资料</a></dd>
-            <dd><a lay-href="personal_information_management/password.html">修改密码</a></dd>
+            <dd><a lay-href="/page/changePassword">修改密码</a></dd>
             <hr>
             <dd layadmin-event="logout" style="text-align: center;"><a href="javascript:void(0);" id="logout">退出</a></dd>
           </dl>
@@ -70,7 +70,7 @@
 
         <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
           <!--首页-->
-          <li data-name="home" class="layui-nav-item layui-nav-itemed">
+          <li data-name="home" class="layui-nav-item">
             <a href="javascript:;" lay-tips="主页" lay-direction="2" >
               <i class="layui-icon layui-icon-home"></i>
               <cite>主页</cite>
@@ -135,7 +135,7 @@
           </li>
           <!--风险发现管理-->
           <li data-name="warehouse" class="layui-nav-item">
-            <a href="javascript:;" lay-href="//www.layui.com/admin/#get" lay-tips="风险发现" lay-direction="2">
+            <a href="javascript:;" lay-tips="风险发现" lay-direction="2">
               <i class="layui-icon layui-icon-tabs"></i>
               <cite>风险发现</cite>
             </a>
