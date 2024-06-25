@@ -68,7 +68,7 @@ public class LoginUserImpl implements LoginServcie {
         // 设置用户的UUID，用于JWT验证
         loginUser.setUuid(uuid);
         // 将登录用户信息存储到Redis，有效期1小时
-        redisCache.setCacheObject("login_" + uuid, JSON.toJSONString(loginUser), 60 * 60, TimeUnit.SECONDS);
+        redisCache.setCacheObject("login_" + uuid, JSON.toJSONString(loginUser), 60*60, TimeUnit.SECONDS);
 
         // 更新用户的登录时间
         // 防止更新到密码，将密码设置为空
