@@ -96,4 +96,14 @@ public class BaseLineController {
     {
         return baseLineResultService.deleteBaseLineResult(ids);
     }
+
+    /**
+     * 查询所有基线结果,返回给前端饼图进行统计
+     * @return
+     */
+    @PostMapping("/baseLineResult/list/all")
+    public ResponseResult findBaseLineResultList()
+    {
+        return baseLineResultService.findAllBaseLineResult();
+    }
 }

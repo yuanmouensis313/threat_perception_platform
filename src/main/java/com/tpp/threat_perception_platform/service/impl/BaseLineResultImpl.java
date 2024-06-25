@@ -67,4 +67,14 @@ public class BaseLineResultImpl implements BaseLineResultService {
         baseLineResultMapper.delete(ids);
         return new ResponseResult(0, "删除成功");
     }
+
+    /**
+     * 查询所有基线检测结果,传回前端，用于饼图统计
+     *
+     * @return
+     */
+    @Override
+    public ResponseResult findAllBaseLineResult() {
+        return new ResponseResult(0, baseLineResultMapper.findAll());
+    }
 }

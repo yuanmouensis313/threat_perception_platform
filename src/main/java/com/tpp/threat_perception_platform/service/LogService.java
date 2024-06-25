@@ -32,4 +32,9 @@ public interface LogService {
      */
     ResponseResult deleteLog(Integer[] ids);
 
+    /**
+     * 返回所有数据的列表，用于饼图的统计
+     */
+    ResponseResult findAllLogList();
+
 }

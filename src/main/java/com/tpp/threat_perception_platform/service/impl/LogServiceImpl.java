@@ -103,4 +103,12 @@ public class LogServiceImpl implements LogService {
         }
         return new ResponseResult(1001, "数据库中不存在该记录");
     }
+
+    /**
+     * 返回所有数据的列表，用于饼图的统计
+     */
+    @Override
+    public ResponseResult findAllLogList() {
+        return new ResponseResult(0, logMapper.findAll());
+    }
 }

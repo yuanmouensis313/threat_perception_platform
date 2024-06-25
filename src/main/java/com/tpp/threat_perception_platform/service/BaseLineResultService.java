@@ -29,4 +29,10 @@ public interface BaseLineResultService {
      */
     ResponseResult deleteBaseLineResult(Integer[] ids);
 
+    /**
+     * 查询所有基线检测结果,传回前端，用于饼图统计
+     * @return
+     */
+    ResponseResult findAllBaseLineResult();
+
 }

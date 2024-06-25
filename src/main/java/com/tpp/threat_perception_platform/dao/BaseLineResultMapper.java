@@ -30,6 +30,8 @@ public interface BaseLineResultMapper {
 
     List<BaseLineResult> selectAll(MyParam myParam);
 
+    List<BaseLineResult> findAll();
+
     int updateByPrimaryKeySelective(BaseLineResult record);
 
     int updateByPrimaryKey(BaseLineResult record);

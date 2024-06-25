@@ -23,7 +23,7 @@
         <div class="layui-row layui-col-space15">
           <div class="layui-col-md6">
             <div class="layui-card">
-              <div class="layui-card-header">数据概览</div>
+              <div class="layui-card-header">系统类型</div>
               <div class="layui-card-body">
                 <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
                 <div id="hosts" style="width: 600px;height:400px;"></div>
@@ -37,6 +37,26 @@
               <div class="layui-card-body">
                 <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
                 <div id="vul" style="width: 600px;height:400px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-col-md6">
+            <div class="layui-card">
+              <div class="layui-card-header">日志统计</div>
+              <div class="layui-card-body">
+                <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+                <div id="logs" style="width: 600px;height:400px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-col-md6">
+            <div class="layui-card">
+              <div class="layui-card-header">基线概述</div>
+              <div class="layui-card-body">
+                <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+                <div id="baseLines" style="width: 600px;height:400px;"></div>
               </div>
             </div>
           </div>
@@ -154,7 +174,7 @@
       xAxis: [
         {
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['Windows', 'Ubuntu', 'Macos', 'Centos', 'Microsoft Windows Server'],
           axisTick: {
             alignWithLabel: true
           }
@@ -170,7 +190,7 @@
           name: '影响主机数量',
           type: 'bar',
           barWidth: '60%',
-          data: [10, 52, 200, 334, 390, 330, 220]
+          data: [9, 6, 6, 5, 5]
         }
       ]
     };
@@ -232,6 +252,227 @@
 
     // 使用刚指定的配置项和数据显示图表。
     vulChart.setOption(option);
+
+    // 日志饼图
+    // 基于准备好的dom，初始化echarts实例
+    var logChart = echarts.init(document.getElementById('logs'));
+
+    option = {
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        top: '5%',
+        left: 'center'
+      },
+      series: [
+        {
+          name: '日志类型',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 10,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: 40,
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: [
+            { value: 1048, name: 'Search Engine' },
+            { value: 735, name: 'Direct' },
+            { value: 580, name: 'Email' },
+            { value: 484, name: 'Union Ads' },
+            { value: 300, name: 'Video Ads' }
+          ]
+        }
+      ]
+    };
+
+    // 定义一个函数来从后端获取数据并更新图表
+    async function logFetchDataAndUpdateChart() {
+      try {
+        const requestOptions = {
+          elem: '#logs',
+          method: 'POST', // 指定请求方法为POST
+          headers: {
+            'Authorization': localStorage.getItem('token')
+          },
+          dataType:"json", //后端返回参数类型
+        };
+        const response = await fetch('/log/list/all',requestOptions);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json(); // 假设返回的是JSON格式的数据
+
+        // 统计每种 eventName 的数量
+        const eventNameCounts = {};
+        for (let i = 0; i < data.data.length; i++){
+          const eventName = data.data[i].eventName;
+          if (!eventNameCounts[eventName]) {
+            eventNameCounts[eventName] = 0;
+          }
+          eventNameCounts[eventName] = eventNameCounts[eventName] + 1;
+        }
+
+        // 将统计结果转换为 ECharts 需要的格式
+        const chartData = Object.keys(eventNameCounts).map(eventName => ({
+          value: eventNameCounts[eventName],
+          name: eventName
+        }));
+
+        // 更新图表配置
+        logChart.setOption({
+          series: [{
+            data: chartData
+          }]
+        });
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    // 调用函数以获取数据并更新图表
+    logFetchDataAndUpdateChart();
+
+    // 使用刚指定的配置项和数据显示图表。
+    logChart.setOption(option);
+
+    // 基线饼图
+    // 基于准备好的dom，初始化echarts实例
+    var baseLineChart = echarts.init(document.getElementById('baseLines'));
+
+    option = {
+      title: {
+        text: '基线种类',
+        subtext: '检测的基线种类概述',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
+      },
+      legend: {
+        left: 'center',
+        top: 'bottom',
+        data: [
+          'rose1',
+          'rose2',
+          'rose3',
+          'rose4',
+          'rose5',
+          'rose6',
+          'rose7',
+          'rose8'
+        ]
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      series: [
+        {
+          name: '基线类型',
+          type: 'pie',
+          radius: [20, 140],
+          center: ['50%', '50%'],
+          roseType: 'area',
+          itemStyle: {
+            borderRadius: 5
+          },
+          data: [
+            { value: 30, name: 'rose 1' },
+            { value: 28, name: 'rose 2' },
+            { value: 26, name: 'rose 3' },
+            { value: 24, name: 'rose 4' },
+            { value: 22, name: 'rose 5' },
+            { value: 20, name: 'rose 6' },
+            { value: 18, name: 'rose 7' },
+            { value: 16, name: 'rose 8' }
+          ]
+        }
+      ]
+    };
+
+    // 定义一个函数来从后端获取数据并更新图表
+    async function baseLineFetchDataAndUpdateChart() {
+      try {
+        const requestOptions = {
+          elem: '#logs',
+          method: 'POST', // 指定请求方法为POST
+          headers: {
+            'Authorization': localStorage.getItem('token')
+          },
+          dataType:"json", //后端返回参数类型
+        };
+        const response = await fetch('/baseLineResult/list/all',requestOptions);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json(); // 假设返回的是JSON格式的数据
+
+        // 统计每种 policyName 的数量
+        // 每种配置类型的中文名对应
+        const name = {
+          SysAccountPolicy: '系统账号策略配置',
+          SysEventAuditPolicy: '系统事件审计策略配置',
+          SysUserPrivilegePolicy: '系统用户特权策略配置',
+          SysSecurityOptionPolicy: '系统安全选项策略配置',
+          Registry: '注册表策略配置'
+        };
+        const policyNameCounts = {};
+        for (let i = 0; i < data.data.length; i++){
+          const policyName = data.data[i].policyName.split('::')[0];
+          if (!policyNameCounts[policyName]) {
+            policyNameCounts[policyName] = 0;
+          }
+          policyNameCounts[policyName] = policyNameCounts[policyName] + 1;
+        }
+
+        // 将统计结果转换为 ECharts 需要的格式
+        const chartData = Object.keys(policyNameCounts).map(policyName => ({
+          value: policyNameCounts[policyName],
+          name: name[policyName]
+        }));
+
+        // 更新图表配置
+        baseLineChart.setOption({
+          series: [{
+            data: chartData
+          }]
+        });
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    // 调用函数以获取数据并更新图表
+    baseLineFetchDataAndUpdateChart();
+
+    // 使用刚指定的配置项和数据显示图表。
+    baseLineChart.setOption(option);
 
   </script>
 </body>

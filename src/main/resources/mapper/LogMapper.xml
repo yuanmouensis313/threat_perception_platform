@@ -85,6 +85,11 @@
             #{id,jdbcType=INTEGER}
         </foreach>
     </select>
+    <select id="findAll" resultType="com.tpp.threat_perception_platform.pojo.Log">
+        select
+        <include refid="Base_Column_List" />
+        from log
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from log

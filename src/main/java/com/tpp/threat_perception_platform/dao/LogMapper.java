@@ -38,4 +38,6 @@ public interface LogMapper {
 
     List<Log> select(@Param("ids") Integer[] ids);
 
+    List<Log> findAll();
+
 }

@@ -54,4 +54,13 @@ public class LogController {
         return logService.deleteLog(ids);
     }
 
+    /**
+     * 获取所有日志列表,返回给饼图做统计
+     * @return
+     */
+    @PostMapping("/log/list/all")
+    public ResponseResult findAllLogList() {
+        return logService.findAllLogList();
+    }
+
 }

@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class RabbitMQSysInfoConsumer {
@@ -64,6 +65,11 @@ public class RabbitMQSysInfoConsumer {
 
         // 将json字符串类型的消息转化为host对象
         Host host = JSON.parseObject(message, Host.class);
+
+        // 如果操作系统的类型为Microsoft Windows 10 家庭中文版，将其改为Windows,正常情况不可以这样搞，这里是我的数据库里面自编的数据类型没编好，真实的数据只有一条，所以做了一下调整
+        if(Objects.equals(host.getOsType(), "Microsoft Windows 10 家庭中文版")){
+            host.setOsType("Windows");
+        }
 
         // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
         int res = hostService.pushHost(host);
