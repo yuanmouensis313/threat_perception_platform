@@ -1,6 +1,7 @@
 package com.tpp.threat_perception_platform.controller;
 
 import com.tpp.threat_perception_platform.param.AssetsParam;
+import com.tpp.threat_perception_platform.param.LogParam;
 import com.tpp.threat_perception_platform.param.MyParam;
 import com.tpp.threat_perception_platform.param.ThreatParam;
 import com.tpp.threat_perception_platform.response.ResponseResult;
@@ -68,6 +69,18 @@ public class HostController {
     @PostMapping("host/threat")
     public ResponseResult threat(@RequestBody ThreatParam threatParam){
         return hostService.threat(threatParam);
+    }
+
+    /**
+     * 日志请求处理，使用LogParm对象装载请求参数
+     *
+     * @param param 主机信息对象，包含主机的详细信息。
+     * @return 返回操作结果，包含成功与否及可能的错误信息。
+     */
+    @PostMapping("host/log")
+    public ResponseResult log(@RequestBody LogParam param){
+        System.out.println(param);
+        return hostService.log(param);
     }
 
     /**

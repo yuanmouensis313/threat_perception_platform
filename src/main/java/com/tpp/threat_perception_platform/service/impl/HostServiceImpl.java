@@ -7,6 +7,7 @@ import com.tpp.threat_perception_platform.dao.AppVulnerabilityMapper;
 import com.tpp.threat_perception_platform.dao.HostMapper;
 import com.tpp.threat_perception_platform.dao.VulnerabilityMapper;
 import com.tpp.threat_perception_platform.param.AssetsParam;
+import com.tpp.threat_perception_platform.param.LogParam;
 import com.tpp.threat_perception_platform.param.MyParam;
 import com.tpp.threat_perception_platform.param.ThreatParam;
 import com.tpp.threat_perception_platform.pojo.Account;
@@ -260,6 +261,43 @@ public class HostServiceImpl implements HostService {
         // 3.发送消息到rabbitmq中（消息队列为agent_mac地址_queue）
         String exchangeName = "agent_exchange";
         String mac = threatParam.getMac().replace(":","");
+        String routingKey = mac;
+        rabbitmqService.sendMessage(exchangeName, routingKey, data);
+
+        // 4. 返回发送成功
+        return new ResponseResult<>(0, "发送成功，请稍后，等待探测结果传回！！！");
+    }
+
+    /**
+     * 日志探测的逻辑处理模块
+     * @param param
+     * @return
+     */
+    @Override
+    public ResponseResult log(LogParam param) {
+        // 1.判断主机是否在线
+        // 获取主机
+        Host db_host = hostMapper.selectByMac(param.getMac());
+        // 当前时间 - db_host的update_time > 4s ? 离线:在线
+        long sub = System.currentTimeMillis() - db_host.getUpdateTime().getTime();
+        if(sub > 4000){
+            // 差值大于4s,说明主机离线
+            // 更新状态信息
+            Host host = new Host();
+            host.setStatus(0);
+            host.setMac(param.getMac());
+            hostMapper.updateByMacSelective(host);
+
+            // 返回离线信息
+            return new ResponseResult(400, "主机离线！请通知主机重新上线！！！");
+        }
+
+        // 2.将param对象转换为JSON字符串
+        String data = JSON.toJSONString(param);
+
+        // 3.发送消息到rabbitmq中（消息队列为agent_mac地址_queue）
+        String exchangeName = "agent_exchange";
+        String mac = param.getMac().replace(":","");
         String routingKey = mac;
         rabbitmqService.sendMessage(exchangeName, routingKey, data);
 
