@@ -37,4 +37,9 @@ public interface LogService {
      */
     ResponseResult findAllLogList();
 
+    /**
+     * 返回最新的一条日志
+     */
+    Log selectNewestLog();
+
 }

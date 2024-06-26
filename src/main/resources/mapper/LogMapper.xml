@@ -90,6 +90,12 @@
         <include refid="Base_Column_List" />
         from log
     </select>
+    <select id="selectNewestData" resultType="com.tpp.threat_perception_platform.pojo.Log">
+        select
+        <include refid="Base_Column_List" />
+        from log
+        order by timestamp desc limit 1
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from log

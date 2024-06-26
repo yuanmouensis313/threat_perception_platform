@@ -174,7 +174,7 @@
       xAxis: [
         {
           type: 'category',
-          data: ['Windows', 'Ubuntu', 'Macos', 'Centos', 'Microsoft Windows Server'],
+          data: [],
           axisTick: {
             alignWithLabel: true
           }
@@ -190,7 +190,7 @@
           name: '影响主机数量',
           type: 'bar',
           barWidth: '60%',
-          data: [9, 6, 6, 5, 5]
+          data: []
         }
       ]
     };
@@ -262,7 +262,7 @@
         trigger: 'item'
       },
       legend: {
-        top: '5%',
+        top: '1%',
         left: 'center'
       },
       series: [
@@ -270,6 +270,7 @@
           name: '日志类型',
           type: 'pie',
           radius: ['40%', '70%'],
+          center:['50%', '65%'],
           avoidLabelOverlap: false,
           itemStyle: {
             borderRadius: 10,
@@ -283,20 +284,14 @@
           emphasis: {
             label: {
               show: true,
-              fontSize: 40,
+              fontSize: 20,
               fontWeight: 'bold'
             }
           },
           labelLine: {
             show: false
           },
-          data: [
-            { value: 1048, name: 'Search Engine' },
-            { value: 735, name: 'Direct' },
-            { value: 580, name: 'Email' },
-            { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' }
-          ]
+          data: []
         }
       ]
     };
@@ -370,16 +365,7 @@
       legend: {
         left: 'center',
         top: 'bottom',
-        data: [
-          'rose1',
-          'rose2',
-          'rose3',
-          'rose4',
-          'rose5',
-          'rose6',
-          'rose7',
-          'rose8'
-        ]
+        data: []
       },
       toolbox: {
         show: true,
@@ -400,16 +386,7 @@
           itemStyle: {
             borderRadius: 5
           },
-          data: [
-            { value: 30, name: 'rose 1' },
-            { value: 28, name: 'rose 2' },
-            { value: 26, name: 'rose 3' },
-            { value: 24, name: 'rose 4' },
-            { value: 22, name: 'rose 5' },
-            { value: 20, name: 'rose 6' },
-            { value: 18, name: 'rose 7' },
-            { value: 16, name: 'rose 8' }
-          ]
+          data: []
         }
       ]
     };

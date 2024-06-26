@@ -16,10 +16,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 public class RabbitMQSysInfoConsumer {
@@ -55,6 +52,9 @@ public class RabbitMQSysInfoConsumer {
 
     @Autowired
     private BaseLineResultService baseLineResultService;
+
+    @Autowired
+    private SystemVulnerabilityService systemVulnerabilityService;
 
     @RabbitListener(queues = {"sysinfo_queue"})
 
@@ -282,12 +282,41 @@ public class RabbitMQSysInfoConsumer {
         }
     }
 
+    @RabbitListener(queues = {"system_vul_queue"})
+
+    public void systemVulnerability(String message, @Headers Map<String,Object> headers,
+                                 Channel channel) throws IOException {
+        // 将json字符串类型的消息转化为UserAppVulnerability对象
+        List<SystemVulnerability> systemVulnerabilityList = JSON.parseArray(message, SystemVulnerability.class);
+        System.out.println(systemVulnerabilityList);
+
+        // 添加扫描时间和任务发起者
+        for (SystemVulnerability systemVulnerability : systemVulnerabilityList) {
+            systemVulnerability.setTime(new Date());
+            systemVulnerability.setTaskSender("admin");
+        }
+        // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
+        int res = systemVulnerabilityService.addSystemVulnerability(systemVulnerabilityList);
+
+        if (res > 0){
+            // res>0，说明影响行数不为0，入库成功
+            // 手动 ACK, 先获取 deliveryTag
+            Long deliveryTag = (Long)headers.get(AmqpHeaders.DELIVERY_TAG);
+            // ACK
+            channel.basicAck(deliveryTag,false);
+        }
+    }
+
     @RabbitListener(queues = {"logs_queue"})
 
     public void log(String message, @Headers Map<String,Object> headers,
                                  Channel channel) throws IOException {
         // 将json字符串类型的消息转化为UserAppVulnerability对象
         List<Log> logList = JSON.parseArray(message, Log.class);
+
+        // 初始化一个列表，只装最新的数据
+        List<Log> newLogList = new ArrayList<>();
+        int res = 0;
 
         // 添加扫描时间和转换时间戳格式
         for (Log log : logList) {
@@ -303,8 +332,28 @@ public class RabbitMQSysInfoConsumer {
                 throw new RuntimeException(e);
             }
         }
-        // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
-        int res = logService.addLogList(logList);
+
+        // 将最新的日志信息入库，之前的日志信息数据库中已经存在，可以不用再入库，以免重复
+        // 获取数据库中最新的数据
+        Log latestLog = logService.selectNewestLog();
+        if (latestLog != null){
+            // 说明数据库中存在数据，只插入最新的
+            // 获取到该最新数据的时间戳
+            Date latestTimestamp = latestLog.getTimestamp();
+
+            for (Log log : logList) {
+                // 如果该日志的时间戳大于等于数据库中最新日志的时间戳，则将该日志入库
+                if (log.getTimestamp().compareTo(latestTimestamp) >= 0){
+                    newLogList.add(log);
+                }
+            }
+            // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
+            res = logService.addLogList(newLogList);
+        }else{
+            // 说明数据库为空，直接全部插入
+            // 消息入库,res用于接收返回的信息，返回的信息为影响的行数
+            res = logService.addLogList(logList);
+        }
 
         if (res > 0){
             // res>0，说明影响行数不为0，入库成功

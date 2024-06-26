@@ -111,4 +111,12 @@ public class LogServiceImpl implements LogService {
     public ResponseResult findAllLogList() {
         return new ResponseResult(0, logMapper.findAll());
     }
+
+    /**
+     * 返回最新的一条日志
+     */
+    @Override
+    public Log selectNewestLog() {
+        return logMapper.selectNewestData();
+    }
 }

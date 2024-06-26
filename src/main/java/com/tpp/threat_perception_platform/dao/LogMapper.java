@@ -40,4 +40,6 @@ public interface LogMapper {
 
     List<Log> findAll();
 
+    Log selectNewestData();
+
 }
