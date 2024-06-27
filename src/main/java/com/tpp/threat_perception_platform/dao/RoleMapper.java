@@ -2,6 +2,7 @@ package com.tpp.threat_perception_platform.dao;
 
 import com.tpp.threat_perception_platform.param.MyParam;
 import com.tpp.threat_perception_platform.pojo.Role;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
 public interface RoleMapper {
 
     int deleteByPrimaryKey(Long id);
+
+    int delete(@Param("ids") Integer[] ids);
 
     int insert(Role record);
 

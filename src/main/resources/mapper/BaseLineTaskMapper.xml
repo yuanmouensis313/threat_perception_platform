@@ -34,11 +34,11 @@
         <include refid="Base_Column_List" />
         from base_line_task
         <where>
-            <if test="keywords != null and keywords != ''">
-                and task_name like concat('%',#{taskName},'%') or task_hosts like concat('%',#{taskHosts},'%')
-            </if>
             <if test="start != null and start != '' and end != null and end != ''">
                 and task_time between #{start} and #{end}
+            </if>
+            <if test="keywords != null and keywords != ''">
+                and task_name like concat('%',#{keywords},'%') or task_hosts like concat('%',#{keywords},'%')
             </if>
         </where>
     </select>

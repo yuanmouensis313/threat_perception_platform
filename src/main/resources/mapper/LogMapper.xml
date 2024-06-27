@@ -33,12 +33,12 @@
         <include refid="Base_Column_List" />
         from log
         <where>
-            <if test="keywords != null">
-                and mac like concat('%',#{keywords,jdbcType=VARCHAR},'%') or event_name like concat('%',#{keywords,jdbcType=VARCHAR},'%')
-                or event_desc like concat('%',#{keywords,jdbcType=VARCHAR},'%') or event_id like concat('%',#{keywords,jdbcType=VARCHAR},'%')
-            </if>
             <if test="start != null and start != '' and end != null and end != ''">
                 and timestamp between #{start} and #{end}
+            </if>
+            <if test="keywords != null and keywords != ''">
+                and mac like concat('%',#{keywords,jdbcType=VARCHAR},'%') or event_name like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+                or event_desc like concat('%',#{keywords,jdbcType=VARCHAR},'%') or event_id like concat('%',#{keywords,jdbcType=VARCHAR},'%')
             </if>
         </where>
     </select>
@@ -48,14 +48,14 @@
         <include refid="Base_Column_List" />
         from log
         <where>
-            and event_id = '4624' or event_id = '4625'
-            <if test="keywords != null">
+            and event_id in ('4624','4625')
+            <if test="start != null and start != '' and end != null and end != ''">
+                and timestamp between #{start} and #{end}
+            </if>
+            <if test="keywords != null  and keywords != ''">
                 and mac like concat('%',#{keywords,jdbcType=VARCHAR},'%') or event_name like concat('%',#{keywords,jdbcType=VARCHAR},'%')
                 or event_desc like concat('%',#{keywords,jdbcType=VARCHAR},'%') or
                 event_id like concat('%',#{keywords,jdbcType=VARCHAR},'%')
-            </if>
-            <if test="start != null and start != '' and end != null and end != ''">
-                and timestamp between #{start} and #{end}
             </if>
         </where>
     </select>
@@ -65,14 +65,14 @@
         <include refid="Base_Column_List" />
         from log
         <where>
-            and event_id = '4720' or event_id = '4722' or event_id = '4723' or event_id = '4728' or event_id = '4738'
-            <if test="keywords != null">
+            event_id in ('4720','4722','4723','4728','4738')
+            <if test="start != null and start != '' and end != null and end != ''">
+                and timestamp between #{start} and #{end}
+            </if>
+            <if test="keywords != null  and keywords != ''">
                 and mac like concat('%',#{keywords,jdbcType=VARCHAR},'%') or event_name like concat('%',#{keywords,jdbcType=VARCHAR},'%')
                 or event_desc like concat('%',#{keywords,jdbcType=VARCHAR},'%') or
                 event_id like concat('%',#{keywords,jdbcType=VARCHAR},'%')
-            </if>
-            <if test="start != null and start != '' and end != null and end != ''">
-                and timestamp between #{start} and #{end}
             </if>
         </where>
     </select>

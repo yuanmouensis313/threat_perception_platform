@@ -45,11 +45,11 @@
         <include refid="Base_Column_List" />
         from host
         <where>
-            <if test="keywords != null and keywords != ''">
-                and hostname like concat('%',#{keywords},'%') or ip like concat('%',#{keywords},'%') or mac like concat('%',#{keywords},'%')
-            </if>
             <if test="start != null and start != '' and end != null and end != ''">
                 and create_time between #{start} and #{end}
+            </if>
+            <if test="keywords != null and keywords != ''">
+                and hostname like concat('%',#{keywords},'%') or ip like concat('%',#{keywords},'%') or mac like concat('%',#{keywords},'%')
             </if>
         </where>
         order by host_id asc

@@ -32,7 +32,7 @@
         <include refid="Base_Column_List" />
         from process
         <where>
-            <if test="keywords != null">
+            <if test="keywords != null and keywords != ''">
                 and mac like concat('%',#{keywords},'%')
             </if>
         </where>

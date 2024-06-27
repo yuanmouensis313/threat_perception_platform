@@ -110,16 +110,8 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public ResponseResult deleteRole(Integer[] ids) {
-        // 遍历ids数组，对每个角色ID执行删除操作
-        for (Integer id : ids) {
-            // 数据校验，确保删除的角色是数据库中存在的
-            if (roleMapper.selectByPrimaryKey(id.longValue()) == null) {
-                // 如果角色不存在，返回错误消息和状态码400
-                return new ResponseResult(400, "角色不存在");
-            }else{
-                roleMapper.deleteByPrimaryKey(id.longValue());
-            }
-        }
+        // 删除角色
+        roleMapper.delete(ids);
         // 返回表示删除成功的结果对象
         return new ResponseResult(0, "删除成功!");
     }

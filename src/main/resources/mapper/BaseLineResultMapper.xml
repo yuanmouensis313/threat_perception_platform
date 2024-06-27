@@ -29,11 +29,11 @@
         <include refid="Base_Column_List" />
         from base_line_result
         <where>
-            <if test="keywords != null">
-                and mac = #{keywords,jdbcType=VARCHAR} or policy_name = #{keywords,jdbcType=VARCHAR} or qualification = #{keywords,jdbcType=VARCHAR} or description = #{keywords,jdbcType=VARCHAR}
-            </if>
             <if test="start != null and start != '' and end != null and end != ''">
                 and time between #{start,jdbcType=TIMESTAMP} and #{end,jdbcType=TIMESTAMP}
+            </if>
+            <if test="keywords != null and keywords != ''">
+                and mac like concat('%',#{keywords,jdbcType=VARCHAR},'%') or policy_name like concat('%',#{keywords,jdbcType=VARCHAR},'%') or qualification like concat('%',#{keywords,jdbcType=VARCHAR},'%') or description like concat('%',#{keywords,jdbcType=VARCHAR},'%')
             </if>
         </where>
     </select>

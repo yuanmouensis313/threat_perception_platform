@@ -35,7 +35,7 @@
         <include refid="Base_Column_List" />
         from hotfix
         <where>
-            <if test="keywords != null">
+            <if test="keywords != null and keywords != ''">
                 and mac = #{keywords,jdbcType=VARCHAR}
             </if>
         </where>
