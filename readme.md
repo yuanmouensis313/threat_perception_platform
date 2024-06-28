@@ -10,7 +10,6 @@ rabbitmq中的队列
 ![img.png](img.png)
 红框的是自动创建，不用管
 
-
 ![img_1.png](img_1.png)
 agent_exchange注意类型为direct
 
