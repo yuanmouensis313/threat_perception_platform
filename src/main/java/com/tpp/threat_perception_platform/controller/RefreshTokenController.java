@@ -12,6 +12,12 @@ public class RefreshTokenController {
     @Autowired
     private RefreshTokenService refreshTokenService;
 
+    /**
+     * 刷新token
+     * @param token
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/refreshToken")
     public ResponseResult refreshToken(@RequestParam("token") String token) throws Exception {
         return refreshTokenService.refreshToken(token);
